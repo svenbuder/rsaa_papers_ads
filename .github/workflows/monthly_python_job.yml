@@ -28,6 +28,8 @@ jobs:
         pip install -r requirements.txt # Make sure to include a requirements.txt file if you have any dependencies
 
     - name: Run Python script
+      env:
+        ADS_API_TOKEN: ${{ secrets.ADS_API_TOKEN }}
       run: |
         PYTHON_SCRIPT_YEAR=$(date +'%Y')
         PYTHON_SCRIPT_MONTH=$(date +'%m')

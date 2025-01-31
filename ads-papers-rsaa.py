@@ -5,6 +5,7 @@ import re
 import sys
 from datetime import datetime
 import ads
+ads.config.token = os.getenv('ADS_API_TOKEN')
 
 """
 Monthly publications from the Research School of Astronomy and Astrophysics (RSAA) at the Australian National University (ANU) are posted to the RSAA website.
