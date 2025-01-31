@@ -1,0 +1,44 @@
+name: Monthly Python Script Execution
+
+#on:
+#  schedule:
+#    # Runs at 10:00 on the first day of every month
+#    - cron: '0 10 1 * *'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x' # Specify the Python version you need
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt # Make sure to include a requirements.txt file if you have any dependencies
+
+    - name: Run Python script
+      run: |
+        PYTHON_SCRIPT_YEAR=$(date +'%Y')
+        PYTHON_SCRIPT_MONTH=$(date +'%m')
+        python ads-papers-rsaa.py $PYTHON_SCRIPT_YEAR $PYTHON_SCRIPT_MONTH
+
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add lunations/*.txt  # Add all new or modified files in the directory
+        git commit -m "Automatically update lunations data for ${PYTHON_SCRIPT_MONTH}/${PYTHON_SCRIPT_YEAR}" -a || echo "No changes to commit"
+        git push
+
+
