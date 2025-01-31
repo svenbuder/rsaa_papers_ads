@@ -1,11 +1,9 @@
 name: Monthly Python Script Execution
 
-#on:
-#  schedule:
-#    # Runs at 10:00 on the first day of every month
-#    - cron: '0 10 1 * *'
-
 on:
+  schedule:
+    # Runs at 10:00 on the first day of every month
+    - cron: '0 10 1 * *'
   push:
     branches:
       - main
@@ -39,8 +37,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add lunations/*.txt  # Add all new or modified files in the directory
-        git commit -m "Automatically update lunations data for ${PYTHON_SCRIPT_MONTH}/${PYTHON_SCRIPT_YEAR}" -a || echo "No changes to commit"
+        git add lunations/*.txt  # Add new month to lunations
+        git commit -m "Automatic monthly update" -a || echo "No changes to commit"
         git push
 
 
