@@ -29,8 +29,15 @@ jobs:
       env:
         ADS_API_TOKEN: ${{ secrets.ADS_API_TOKEN }}
       run: |
-        PYTHON_SCRIPT_YEAR=$(date +'%Y')
-        PYTHON_SCRIPT_MONTH=$(date +'%m')
+        year=$(date +'%Y')
+        month=$(date +'%m')
+        if [ "$month" -eq 1 ]; then
+          PYTHON_SCRIPT_YEAR=$((year - 1))
+          PYTHON_SCRIPT_MONTH=12
+        else
+          PYTHON_SCRIPT_YEAR=$year
+          PYTHON_SCRIPT_MONTH=$((month - 1))
+        fi
         python ads-papers-rsaa.py $PYTHON_SCRIPT_YEAR $PYTHON_SCRIPT_MONTH
 
     - name: Commit files
