@@ -1,0 +1,41 @@
+name: Monthly Python Script Execution
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x' # Specify the Python version you need
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt # Make sure to include a requirements.txt file if you have any dependencies
+
+    - name: Run Python script
+      env:
+        ADS_API_TOKEN: ${{ secrets.ADS_API_TOKEN }}
+      run: |
+        year=$(date +'%Y')
+        month=$(date +'%m')
+        PYTHON_SCRIPT_YEAR=$year
+        PYTHON_SCRIPT_MONTH=$month
+        python ads-papers-rsaa.py $PYTHON_SCRIPT_YEAR $PYTHON_SCRIPT_MONTH
+
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add lunations/*.txt  # Add new month to lunations
+        git commit -m "Automatic monthly update" -a || echo "No changes to commit"
+        git push
+
+
